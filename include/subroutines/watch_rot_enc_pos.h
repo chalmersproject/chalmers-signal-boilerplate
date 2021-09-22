@@ -1,4 +1,4 @@
-void watch_rot_enc_pos()
+int watch_rot_enc_pos(int occupancy)
 {
     static int pos = 0;
     int newPos = encoder.getPosition();
@@ -30,4 +30,5 @@ void watch_rot_enc_pos()
             occupancy = capacity;
         }
     }
+    return occupancy;
 }
