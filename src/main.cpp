@@ -1,71 +1,196 @@
-//////////////////////////////////////////////////////////
-//            CHALMERS SIGNAL OCCUPANCY                 //
-//////////////////////////////////////////////////////////
 /*
-The Chalmers Signal Occuapncy Device Boilerplate
-Used for testing parts of the device
-This firmware (should) initialize all hardware correctly and supply the programmer with primitives to interact with them
+  This tests the alpha blending function that is used with the antialiased
+  fonts:
 
-Written an Maintained by the Chalmers project info@chalmersproject.com
-F/OSS under M.I.T License
+  Alpha = 0 = 100% background, alpha = 255 = 100% foreground colour
+
+  blendedColor = tft.alphaBlend(alpha, fg_color, bg_color);
+
+  The alphaBlend() function operates on 16 bit colours only
+  A test is included where the colours are mapped to 8 bits after blending
+
+  Information on alpha blending is here
+  https://en.wikipedia.org/wiki/Alpha_compositing
+  
+  Example for library:
+  https://github.com/Bodmer/TFT_eSPI
+
+  The sketch has been tested on a 320x240 ILI9341 based TFT, it
+  could be adapted for other screen sizes.
+
+  Created by Bodmer 10/2/18
+
+  #########################################################################
+  ###### DON'T FORGET TO UPDATE THE User_Setup.h FILE IN THE LIBRARY ######
+  #########################################################################
 */
 
-///////////////////////////////////////////////////////////////////////////////////////////
-//                    Globals                                                            //
-///////////////////////////////////////////////////////////////////////////////////////////
-int occupancy = 0;
-int capacity = 0;
+#include <TFT_eSPI.h> // Include the graphics library
 
-#include <Arduino.h>
-#include <tft_globals.h>
-#include <led_globals.h>
-#include <wifi_globals.h>
-#include <rot_enc_globals.h>
-
-///////////////////////////////////////////////////////////////////////////////////////////
-//                    Toggles                                                            //
-///////////////////////////////////////////////////////////////////////////////////////////
-
-// some chalmers signals have red-pcb 1.44" displays from creatron
-// others use the cheaper blue-pcb 1.44" displays from aliexpress
-static int display_color = 1; //(blue_pcb = 1; red_pcb = 2)
-
-// for debugging it's useful to turn off the chalmers signal's internet-y abilities. That way we can do things like make changes with it's interface without waiting for it to connect to the internet
-static bool enable_internet = false;
-
-// earlier versions of chalmers signals don't have their button attached to the ESP. It's useful to be able to quickly turn off all features of the chalmers signal that use this button.
-static bool has_button = false;
-
-///////////////////////////////////////////////////////////////////////////////////////////
-//                    Subroutines                                                        //
-///////////////////////////////////////////////////////////////////////////////////////////
-#include <subroutines/watch_rot_enc_pos.h>
-#include <subroutines/wait_millis_for_push.h>
-#include <subroutines/shink_one_digit.h>
-
-///////////////////////////////////////////////////////////////////////////////////////////
-//                    MAIN SCRIPT STARTS HERE                                            //
-///////////////////////////////////////////////////////////////////////////////////////////
-
-void setup()
+TFT_eSPI tft = TFT_eSPI(); // Create object "tft"
+// #########################################################################
+// Return a 16 bit rainbow colour
+// #########################################################################
+unsigned int rainbow(byte value)
 {
-  Serial.begin(115200);
-  
-  
-  tft_Setup(); example_tft_show();
-  LED_Setup(); example_show_LED();
-  rot_enc_Setup();
-  
-  if ( enable_internet == true)
+  // If 'value' is in the range 0-159 it is converted to a spectrum colour
+  // from 0 = red through to 127 = blue to 159 = violet
+  // Extending the range to 0-191 adds a further violet to red band
+
+  value = value % 192;
+
+  byte red = 0;   // Red is the top 5 bits of a 16 bit colour value
+  byte green = 0; // Green is the middle 6 bits, but only top 5 bits used here
+  byte blue = 0;  // Blue is the bottom 5 bits
+
+  byte sector = value >> 5;
+  byte amplit = value & 0x1F;
+
+  switch (sector)
   {
-    initWifi();
+  case 0:
+    red = 0x1F;
+    green = amplit; // Green ramps up
+    blue = 0;
+    break;
+  case 1:
+    red = 0x1F - amplit; // Red ramps down
+    green = 0x1F;
+    blue = 0;
+    break;
+  case 2:
+    red = 0;
+    green = 0x1F;
+    blue = amplit; // Blue ramps up
+    break;
+  case 3:
+    red = 0;
+    green = 0x1F - amplit; // Green ramps down
+    blue = 0x1F;
+    break;
+  case 4:
+    red = amplit; // Red ramps up
+    green = 0;
+    blue = 0x1F;
+    break;
+  case 5:
+    red = 0x1F;
+    green = 0;
+    blue = 0x1F - amplit; // Blue ramps down
+    break;
   }
+
+  return red << 11 | green << 6 | blue;
 }
 
-unsigned long now, last;
+// -------------------------------------------------------------------------
+// Setup
+// -------------------------------------------------------------------------
+void setup(void)
+{
+  tft.init();
+  // tft.setRotation(0);
+  tft.fillScreen(TFT_DARKGREY);
+}
 
+// -------------------------------------------------------------------------
+// Main loop
+// -------------------------------------------------------------------------
 void loop()
 {
-  // occupancy = watch_rot_enc_pos(occupancy);
-  // Serial.println( "Occupancy: " + occupancy);
+  // 16 bit colours  (5 bits red, 6 bits green, 5 bits blue)
+  // Blend from white to full spectrum
+  for (int a = 0; a < 256; a += 2) // Alpha 0 = 100% background, alpha 255 = 100% foreground
+  {
+    for (int c = 0; c < 192; c++)
+      tft.drawPixel(c, a / 2, tft.alphaBlend(a, rainbow(c), TFT_WHITE));
+  }
+
+  // Blend from full spectrum to black
+  for (int a = 255; a > 2; a -= 2)
+  {
+    for (int c = 0; c < 192; c++)
+      tft.drawPixel(c, 128 + (255 - a) / 2, tft.alphaBlend(a, rainbow(c), TFT_BLACK));
+  }
+
+  // Blend from white to black (32 grey levels)
+  for (uint16_t a = 0; a < 255; a++) // Alpha 0 = 100% background, alpha 255 = 100% foreground
+  {
+    tft.drawFastHLine(192, a, 12, tft.alphaBlend(a, TFT_BLACK, TFT_WHITE));
+    tft.drawFastHLine(204, a, 12, tft.alphaBlend(a, TFT_BLACK, TFT_RED));
+    tft.drawFastHLine(216, a, 12, tft.alphaBlend(a, TFT_BLACK, TFT_GREEN));
+    tft.drawFastHLine(228, a, 12, tft.alphaBlend(a, TFT_BLACK, TFT_BLUE));
+  }
+
+  delay(4000);
+
+  // Blend from white to colour (32 grey levels)
+  for (uint16_t a = 0; a < 255; a++) // Alpha 0 = 100% background, alpha 255 = 100% foreground
+  {
+    //tft.drawFastHLine(192, a, 12, tft.alphaBlend(a, TFT_BLACK, TFT_WHITE));
+    tft.drawFastHLine(204, a, 12, tft.alphaBlend(a, TFT_RED, TFT_WHITE));
+    tft.drawFastHLine(216, a, 12, tft.alphaBlend(a, TFT_GREEN, TFT_WHITE));
+    tft.drawFastHLine(228, a, 12, tft.alphaBlend(a, TFT_BLUE, TFT_WHITE));
+  }
+
+  delay(4000);
+
+  //*
+  // Decrease to 8 bit colour (3 bits red, 3 bits green, 2 bits blue)
+  // Blend from white to full spectrum
+  for (int a = 0; a < 256; a += 2) // Alpha 0 = 100% background, alpha 255 = 100% foreground
+  {
+    // Convert blended 16 bit colour to 8 bits to reduce colour resolution, then map back to 16 bits for displaying
+    for (int c = 0; c < 192; c++)
+      tft.drawPixel(c, a / 2, tft.color8to16(tft.color16to8(tft.alphaBlend(a, rainbow(c), 0xFFFF))));
+  }
+
+  // Blend from full spectrum to black
+  for (int a = 255; a > 2; a -= 2)
+  {
+    // Convert blended 16 bit colour to 8 bits to reduce colour resolution, then map back to 16 bits for displaying
+    for (int c = 0; c < 192; c++)
+      tft.drawPixel(c, 128 + (255 - a) / 2, tft.color8to16(tft.color16to8(tft.alphaBlend(a, rainbow(c), 0))));
+  }
+
+  // Blend from white to black (4 grey levels - it will draw 4 more with a blue tinge due to lower blue bit count)
+  // Blend from black to a primary colour
+  for (uint16_t a = 0; a < 255; a++) // Alpha 0 = 100% background, alpha 255 = 100% foreground
+  {
+    tft.drawFastHLine(192, a, 12, tft.color8to16(tft.color16to8(tft.alphaBlend(a, TFT_BLACK, TFT_WHITE))));
+    tft.drawFastHLine(204, a, 12, tft.color8to16(tft.color16to8(tft.alphaBlend(a, TFT_BLACK, TFT_RED))));
+    tft.drawFastHLine(216, a, 12, tft.color8to16(tft.color16to8(tft.alphaBlend(a, TFT_BLACK, TFT_GREEN))));
+    tft.drawFastHLine(228, a, 12, tft.color8to16(tft.color16to8(tft.alphaBlend(a, TFT_BLACK, TFT_BLUE))));
+  }
+
+  delay(4000);
+  //*/
+
+  /*
+  // 16 bit colours  (5 bits red, 6 bits green, 5 bits blue)
+  for (int a = 0; a < 256; a+=2) // Alpha 0 = 100% background, alpha 255 = 100% foreground
+  {
+    for (int c = 0; c < 192; c++) tft.drawPixel(c, a/2, tft.alphaBlend(a, rainbow(c), TFT_CYAN));
+  }
+
+  // Blend from full spectrum to cyan
+  for (int a = 255; a > 2; a-=2)
+  {
+    for (int c = 0; c < 192; c++) tft.drawPixel(c, 128 + (255-a)/2, tft.alphaBlend(a, rainbow(c), TFT_YELLOW));
+  }
+  //*/
+
+  /*
+  // Blend other colour transitions for test purposes
+  for (uint16_t a = 0; a < 255; a++) // Alpha 0 = 100% background, alpha 255 = 100% foreground
+  {
+    tft.drawFastHLine(192, a, 12, tft.alphaBlend(a, TFT_WHITE,  TFT_WHITE));  // Should show as solid white
+    tft.drawFastHLine(204, a, 12, tft.alphaBlend(a, TFT_BLACK,  TFT_BLACK));  // Should show as solid black
+    tft.drawFastHLine(216, a, 12, tft.alphaBlend(a, TFT_YELLOW, TFT_CYAN));   // Brightness should be fairly even
+    tft.drawFastHLine(228, a, 12, tft.alphaBlend(a, TFT_CYAN,   TFT_MAGENTA));// Brightness should be fairly even
+  }
+
+  delay(4000);
+  //*/
 }
+

@@ -5,9 +5,9 @@
 #include <TFT_ILI9163C.h>
 #include <Adafruit_GFX.h>
 #include <RotaryEncoder.h>
-// #include "GUIslice.h"
-// #include "GUIslice_ex.h"
-// #include "GUIslice_drv.h"
+#include <GUIslice.h>
+#include <GUIslice_ex.h>
+#include <GUIslice_drv.h>
 
 //
 // Global Variables
