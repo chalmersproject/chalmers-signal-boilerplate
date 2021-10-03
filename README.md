@@ -1,6 +1,6 @@
 # Chalmers Signal Occupancy
 
-The Open-Shelter (pron. Chalmers Signal) Occuapncy Device Boilerplate
+The Open-Shelter (pronounced Chalmers Signal) Occuapncy Device Boilerplate
 Used for testing parts of the device
 This firmware (should) initialize all hardware correctly and supply the programmer with primitives to interact with them
 

@@ -97,8 +97,8 @@ extern "C" {
   // For TFT_eSPI, the display wiring is defined by TFT_eSPI's User_Setup.h
 
   // SD Card
-  //#define ADAGFX_PIN_SDCS    2 // ESP8266 + Adafruit FeatherWing 2.4"
-  #define ADAGFX_PIN_SDCS     14 // ESP32   + Adafruit FeatherWing 2.4"
+  // #define ADAGFX_PIN_SDCS    2 // ESP8266 + Adafruit FeatherWing 2.4"
+  // #define ADAGFX_PIN_SDCS     14 // ESP32   + Adafruit FeatherWing 2.4"
   //#define ADAGFX_PIN_SDCS    5 // Others  + Adafruit FeatherWing 2.4"
 
   // -----------------------------------------------------------------------------
@@ -107,7 +107,7 @@ extern "C" {
 
   // Set Default rotation of the display
   // - Values 0,1,2,3. Rotation is clockwise
-  #define GSLC_ROTATE     1
+  #define GSLC_ROTATE     0
 
 
   // -----------------------------------------------------------------------------
@@ -154,7 +154,7 @@ extern "C" {
   // Enable support for SPIFFS File System access
   // - Set to 1 to enable, 0 to disable
   // - Note that this requires the inclusion of TFT_eFEX library
-  #define GSLC_SPIFFS_EN               0 
+  #define GSLC_SPIFFS_EN               0
 
 
   // =============================================================================
@@ -178,7 +178,7 @@ extern "C" {
 
   // Define buffer size for loading images from SD
   // - A larger buffer will be faster but at the cost of RAM
-  #define GSLC_SD_BUFFPIXEL   50
+  #define GSLC_SD_BUFFPIXEL   10
 
   // Enable support for graphics clipping (DrvSetClipRect)
   // - Note that this will impact performance of drawing graphics primitives
