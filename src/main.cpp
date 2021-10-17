@@ -12,6 +12,7 @@
 // ------------------------------------------------
 // Headers to include
 // ------------------------------------------------
+#include "Arduino.h"
 #include "GUIsliceProjects_GSLC.h"
 
 
@@ -129,19 +130,41 @@ void setup()
 // -----------------------------------
 // Main event loop
 // -----------------------------------
+int m_nCount;
 void loop()
 {
-
   // ------------------------------------------------
   // Update GUI Elements
   // ------------------------------------------------
   
   //TODO - Add update code for any text, gauges, or sliders
-  
+
+  // example 
+  char acTxt[MAX_STR];
+
+  // General counter
+  m_nCount++;
+
+  // Update elements on active page
+
+  snprintf(acTxt, MAX_STR, "%u", m_nCount / 5);
+  gslc_ElemSetTxtStr(&m_gui, m_pElemCnt, acTxt);
+
+  gslc_ElemXProgressSetVal(&m_gui, m_pElemProgress, ((m_nCount / 1) % 100));
+
+  // NOTE: A more efficient method is to move the following
+  //       code into the slider position callback function.
+  //       Please see example 07.
+  int nPos = gslc_ElemXSliderGetPos(&m_gui, m_pElemSlider);
+  snprintf(acTxt, MAX_STR, "%u", nPos);
+  gslc_ElemSetTxtStr(&m_gui, m_pElemSliderTxt, acTxt);
+
+  gslc_ElemXProgressSetVal(&m_gui, m_pElemProgress1, (nPos * 80.0 / 100.0) - 15);
+
+
   // ------------------------------------------------
   // Periodically call GUIslice update function
   // ------------------------------------------------
   gslc_Update(&m_gui);
-    
 }
 

@@ -157,9 +157,9 @@ void InitGUIslice_gen()
           (char*)m_sRingText1,11,E_BUILTIN5X8);
   gslc_ElemXRingGaugeSetValRange(&m_gui, pElemRef, 0, 100);
   gslc_ElemXRingGaugeSetVal(&m_gui, pElemRef, 20); // Set initial value
-  gslc_ElemXRingGaugeSetAngleRange(&m_gui,pElemRef, 180, 360, false);
+  gslc_ElemXRingGaugeSetAngleRange(&m_gui,pElemRef, 220, 130, true);
   gslc_ElemXRingGaugeSetColorActiveFlat(&m_gui,pElemRef, GSLC_COL_RED);
-  gslc_ElemXRingGaugeSetColorInactive(&m_gui,pElemRef, GSLC_COL_GREEN_DK2);
+  gslc_ElemXRingGaugeSetColorInactive(&m_gui,pElemRef, GSLC_COL_BLACK);
   m_pElemXRingGauge1 = pElemRef;
   
   // Create CAPACITY_HEADER text label
