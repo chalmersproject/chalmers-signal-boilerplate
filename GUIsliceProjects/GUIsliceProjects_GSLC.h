@@ -185,7 +185,7 @@ void InitGUIslice_gen()
   // Create CAPACITY_NUM_MONITOR numeric input field
   static char m_sInputNumber2[7] = "";
   pElemRef = gslc_ElemCreateTxt(&m_gui,CAPACITY_NUM_MONITOR,E_PG_MAIN,(gslc_tsRect){38,68,67,22},
-    (char*)m_sInputNumber2,7,E_DOSISBOLD16V);
+    (char*)m_sInputNumber2,7,E_DOSISBOLD16V); 
   gslc_ElemSetTxtAlign(&m_gui,pElemRef,GSLC_ALIGN_MID_MID);
   gslc_ElemSetTxtMargin(&m_gui,pElemRef,5);
   gslc_ElemSetCol(&m_gui,pElemRef,GSLC_COL_BLACK,GSLC_COL_BLACK,GSLC_COL_BLACK);
