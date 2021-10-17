@@ -156,7 +156,11 @@ void InitGUIslice_gen()
           (gslc_tsRect){22,10,100,100},
           (char*)m_sRingText1,11,E_BUILTIN5X8);
   gslc_ElemXRingGaugeSetValRange(&m_gui, pElemRef, 0, 100);
+<<<<<<< HEAD
   gslc_ElemXRingGaugeSetVal(&m_gui, pElemRef, 20); // Set initial value
+=======
+  gslc_ElemXRingGaugeSetVal(&m_gui, pElemRef, 255); // Set initial value
+>>>>>>> working-test-gauge
   gslc_ElemXRingGaugeSetAngleRange(&m_gui,pElemRef, 220, 130, true);
   gslc_ElemXRingGaugeSetColorActiveFlat(&m_gui,pElemRef, GSLC_COL_RED);
   gslc_ElemXRingGaugeSetColorInactive(&m_gui,pElemRef, GSLC_COL_BLACK);

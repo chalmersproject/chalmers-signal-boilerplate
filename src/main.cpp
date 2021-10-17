@@ -36,7 +36,7 @@ void setup()
   // ------------------------------------------------
   // Initialize
   // ------------------------------------------------
-  Serial.begin(9600);
+  Serial.begin(115200);
   // Wait for USB Serial 
   //delay(1000);  // NOTE: Some devices require a delay after Serial.begin() before serial port can be used
 
@@ -46,43 +46,35 @@ void setup()
   // Create graphic elements
   // ------------------------------------------------
   InitGUIslice_gen();
-
+  // gslc_ElemXRingGaugeSetValRange(&m_gui, pElemRef, 0, CAPACITY);
 }
 
 // -----------------------------------
 // Main event loop
 // -----------------------------------
-int m_nCount;
+int dial_tick = 0;
+unsigned int now, dial_tick_interval;
 void loop()
 {
+  now = millis();
+  if (now - dial_tick_interval >= 200)
+  {
+    dial_tick++;
+    dial_tick_interval=now;
+  } else if (dial_tick >= 100)
+  {
+    dial_tick=0;
+  }
+  
+
   // ------------------------------------------------
   // Update GUI Elements
   // ------------------------------------------------
-  
+  char dial_tick_string[MAX_STR];
+  snprintf(dial_tick_string, MAX_STR, "%u", dial_tick);
+  gslc_ElemSetTxtStr(&m_gui, m_pElemXRingGauge1, dial_tick_string);
+  gslc_ElemXRingGaugeSetVal(&m_gui, m_pElemXRingGauge1, dial_tick);
   //TODO - Add update code for any text, gauges, or sliders
-
-  // example 
-  char acTxt[MAX_STR];
-
-  // General counter
-  // m_nCount++;
-  // delay(200);
-  // // Update elements on active page
-
-  // snprintf(acTxt, MAX_STR, "%u", m_nCount / 5);
-  // gslc_ElemSetTxtStr(&m_gui, m_pElemXRingGauge1, acTxt);
-
-  // gslc_ElemXProgressSetVal(&m_gui, m_pElemXRingGauge1, ((m_nCount / 1) % 100));
-
-  // // NOTE: A more efficient method is to move the following
-  // //       code into the slider position callback function.
-  // //       Please see example 07.
-  // int nPos = gslc_ElemXSliderGetPos(&m_gui, m_pElemSlider);
-  // snprintf(acTxt, MAX_STR, "%u", nPos);
-  // gslc_ElemSetTxtStr(&m_gui, m_pElemSliderTxt, acTxt);
-
-  // gslc_ElemXProgressSetVal(&m_gui, m_pElemProgress1, (nPos * 80.0 / 100.0) - 15);
-
 
   // ------------------------------------------------
   // Periodically call GUIslice update function
@@ -90,3 +82,4 @@ void loop()
   gslc_Update(&m_gui);
 }
 
+  

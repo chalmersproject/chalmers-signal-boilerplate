@@ -150,17 +150,39 @@ void InitGUIslice_gen()
 
   // -----------------------------------
   // PAGE: E_PG_MAIN
-  
 
-  // Create ring gauge OCCUPANCY_GAGE 
+  // Create ring gauge OCCUPANCY_GAGE
   static char m_sRingText1[11] = "";
-  pElemRef = gslc_ElemXRingGaugeCreate(&m_gui,OCCUPANCY_GAGE,E_PG_MAIN,&m_sXRingGauge1,
-          (gslc_tsRect){22,10,100,100},
-          (char*)m_sRingText1,11,E_BUILTIN5X8);
+  /*
+  //
+  // this RingGauge creates an upside down U shaped gage near bottom screen
+  //
+  pElemRef = gslc_ElemXRingGaugeCreate(&m_gui, OCCUPANCY_GAGE, E_PG_MAIN, &m_sXRingGauge1,
+                                       (gslc_tsRect){3, 23, 120, 140},
+                                       (char *)m_sRingText1, 11, E_BUILTIN5X8);
   gslc_ElemXRingGaugeSetValRange(&m_gui, pElemRef, 0, 100);
-  gslc_ElemXRingGaugeSetVal(&m_gui, pElemRef, 20); // Set initial value
+  gslc_ElemXRingGaugeSetAngleRange(&m_gui, pElemRef, 250, 220, true);
+  gslc_ElemXRingGaugeSetColorActiveFlat(&m_gui, pElemRef, GSLC_COL_GREEN);
+  gslc_ElemXRingGaugeSetColorInactive(&m_gui, pElemRef, GSLC_COL_GRAY);
+  */
+
+  //
+  // this RingGuage creates a circle gage near middle screen
+  //
+  pElemRef = gslc_ElemXRingGaugeCreate(&m_gui, OCCUPANCY_GAGE, E_PG_MAIN, &m_sXRingGauge1,
+                                       (gslc_tsRect){7, 20, 113, 97},
+                                       (char *)m_sRingText1, 11, E_BUILTIN5X8);
+  gslc_ElemXRingGaugeSetValRange(&m_gui, pElemRef, 0, 100);
+  gslc_ElemXRingGaugeSetAngleRange(&m_gui, pElemRef, 0, 360, true);
+  gslc_ElemXRingGaugeSetColorActiveFlat(&m_gui, pElemRef, GSLC_COL_RED);
+  // gslc_ElemXRingGaugeSetColorActiveGradient(&m_gui, pElemRef, GSLC_COL_GREEN, GSLC_COL_YELLOW);
+  gslc_ElemXRingGaugeSetColorInactive(&m_gui, pElemRef, GSLC_COL_GRAY);
+
+  //
+  // creates reference for this ringgauge so it can be updated later
+  gslc_ElemXRingGaugeSetVal(&m_gui, pElemRef, 0); // Set initial value
   m_pElemXRingGauge1 = pElemRef;
-  
+  /*
   // Create CAPACITY_HEADER text label
   pElemRef = gslc_ElemCreateTxt(&m_gui,CAPACITY_HEADER,E_PG_MAIN,(gslc_tsRect){10,70,25,10},
     (char*)"",0,E_BUILTIN5X8);
@@ -199,6 +221,7 @@ void InitGUIslice_gen()
   m_pElemKeyPadNum = gslc_ElemXKeyPadCreate_Num(&m_gui, E_ELEM_KEYPAD_NUM, E_POP_KEYPAD_NUM,
     &m_sKeyPadNum, 65, 80, E_BUILTIN5X8, &sCfg);
   gslc_ElemXKeyPadValSetCb(&m_gui, m_pElemKeyPadNum, &CbKeypad);
+  */
 //<InitGUI !End!>
 
 //<Startup !Start!>
