@@ -37,7 +37,6 @@
 #endif
 #include <TFT_eSPI.h>
 #define DOSISBOOK16_VLW "DosisBold16"
-#define DOSISBOOK20_VLW "DosisBold20"
 //<Fonts !End!>
 
 // ------------------------------------------------
@@ -51,10 +50,10 @@
 // ------------------------------------------------
 //<Enum !Start!>
 enum {E_PG_MAIN,E_POP_KEYPAD_NUM};
-enum {CAPACITY_HEADER,CAPACITY_NUM_MONITOR,OCCUPANCY_GAGE
+enum {CAPACITY_HEADER,CAPACITY_NUM_MONITOR,E_DRAW_LINE1,OCCUPANCY_GAGE
       ,OCCUPANCY_HEADER,OCCUPANCY_NUM_MONITOR,E_ELEM_KEYPAD_NUM};
 // Must use separate enum for fonts with MAX_FONT at end to use gslc_FontSet.
-enum {E_BUILTIN5X8,E_DOSISBOLD16V,E_DOSISBOLD20V,MAX_FONT};
+enum {E_BUILTIN5X8,E_DOSISBOLD16V,MAX_FONT};
 //<Enum !End!>
 
 // ------------------------------------------------
@@ -67,7 +66,7 @@ enum {E_BUILTIN5X8,E_DOSISBOLD16V,E_DOSISBOLD20V,MAX_FONT};
 //<ElementDefines !Start!>
 #define MAX_PAGE                2
 
-#define MAX_ELEM_PG_MAIN 5 // # Elems total on page
+#define MAX_ELEM_PG_MAIN 6 // # Elems total on page
 #define MAX_ELEM_PG_MAIN_RAM MAX_ELEM_PG_MAIN // # Elems in RAM
 //<ElementDefines !End!>
 
@@ -134,7 +133,6 @@ void InitGUIslice_gen()
     if (!gslc_FontSet(&m_gui,E_BUILTIN5X8,GSLC_FONTREF_PTR,NULL,1)) { return; }
     if (!gslc_FontSet(&m_gui,E_DOSISBOLD16V,GSLC_FONTREF_FNAME,DOSISBOOK16_VLW,16)) { return; }
     gslc_FontSetMode(&m_gui, E_DOSISBOLD16V, GSLC_FONTREF_MODE_1);	
-    if (!gslc_FontSet(&m_gui,E_DOSISBOLD20V,GSLC_FONTREF_FNAME,DOSISBOOK20_VLW,20)) { return; }
 //<Load_Fonts !End!>
 
 //<InitGUI !Start!>
@@ -150,65 +148,56 @@ void InitGUIslice_gen()
 
   // -----------------------------------
   // PAGE: E_PG_MAIN
+  
 
-  // Create ring gauge OCCUPANCY_GAGE
+  // Create ring gauge OCCUPANCY_GAGE 
   static char m_sRingText1[11] = "";
-  /*
-  //
-  // this RingGauge creates an upside down U shaped gage near bottom screen
-  //
-  pElemRef = gslc_ElemXRingGaugeCreate(&m_gui, OCCUPANCY_GAGE, E_PG_MAIN, &m_sXRingGauge1,
-                                       (gslc_tsRect){3, 23, 120, 140},
-                                       (char *)m_sRingText1, 11, E_BUILTIN5X8);
+  pElemRef = gslc_ElemXRingGaugeCreate(&m_gui,OCCUPANCY_GAGE,E_PG_MAIN,&m_sXRingGauge1,
+          (gslc_tsRect){22,10,100,100},
+          (char*)m_sRingText1,11,E_BUILTIN5X8);
   gslc_ElemXRingGaugeSetValRange(&m_gui, pElemRef, 0, 100);
-  gslc_ElemXRingGaugeSetAngleRange(&m_gui, pElemRef, 250, 220, true);
-  gslc_ElemXRingGaugeSetColorActiveFlat(&m_gui, pElemRef, GSLC_COL_GREEN);
-  gslc_ElemXRingGaugeSetColorInactive(&m_gui, pElemRef, GSLC_COL_GRAY);
-  */
-
-  //
-  // this RingGuage creates a circle gage near middle screen
-  //
-  pElemRef = gslc_ElemXRingGaugeCreate(&m_gui, OCCUPANCY_GAGE, E_PG_MAIN, &m_sXRingGauge1,
-                                       (gslc_tsRect){7, 20, 113, 97},
-                                       (char *)m_sRingText1, 11, E_BUILTIN5X8);
-  gslc_ElemXRingGaugeSetValRange(&m_gui, pElemRef, 0, 100);
-  gslc_ElemXRingGaugeSetAngleRange(&m_gui, pElemRef, 0, 360, true);
-  gslc_ElemXRingGaugeSetColorActiveGradient(&m_gui, pElemRef, GSLC_COL_GREEN, GSLC_COL_RED_DK1);
-  gslc_ElemXRingGaugeSetColorInactive(&m_gui, pElemRef, GSLC_COL_GRAY);
-
-  //
-  // creates reference for this ringgauge so it can be updated later
-  gslc_ElemXRingGaugeSetVal(&m_gui, pElemRef, 0); // Set initial value
+  gslc_ElemXRingGaugeSetVal(&m_gui, pElemRef, 255); // Set initial value
+  gslc_ElemXRingGaugeSetAngleRange(&m_gui,pElemRef, 220, 130, true);
+  gslc_ElemXRingGaugeSetColorActiveFlat(&m_gui,pElemRef, GSLC_COL_RED);
+  gslc_ElemXRingGaugeSetColorInactive(&m_gui,pElemRef, GSLC_COL_BLACK);
   m_pElemXRingGauge1 = pElemRef;
-  /*
+  
   // Create CAPACITY_HEADER text label
-  pElemRef = gslc_ElemCreateTxt(&m_gui,CAPACITY_HEADER,E_PG_MAIN,(gslc_tsRect){10,70,25,10},
+  pElemRef = gslc_ElemCreateTxt(&m_gui,CAPACITY_HEADER,E_PG_MAIN,(gslc_tsRect){5,80,25,10},
     (char*)"",0,E_BUILTIN5X8);
   
   // Create OCCUPANCY_NUM_MONITOR numeric input field
   static char m_sInputNumber1[7] = "";
-  pElemRef = gslc_ElemCreateTxt(&m_gui,OCCUPANCY_NUM_MONITOR,E_PG_MAIN,(gslc_tsRect){50,30,79,27},
-    (char*)m_sInputNumber1,7,E_DOSISBOLD20V);
+  pElemRef = gslc_ElemCreateTxt(&m_gui,OCCUPANCY_NUM_MONITOR,E_PG_MAIN,(gslc_tsRect){38,37,67,25},
+    (char*)m_sInputNumber1,7,E_DOSISBOLD16V);
+  gslc_ElemSetTxtAlign(&m_gui,pElemRef,GSLC_ALIGN_MID_MID);
   gslc_ElemSetTxtMargin(&m_gui,pElemRef,5);
+  gslc_ElemSetCol(&m_gui,pElemRef,GSLC_COL_BLACK,GSLC_COL_BLACK,GSLC_COL_BLACK);
   gslc_ElemSetFrameEn(&m_gui,pElemRef,true);
   gslc_ElemSetClickEn(&m_gui, pElemRef, true);
   gslc_ElemSetTouchFunc(&m_gui, pElemRef, &CbBtnCommon);
   m_pElemVal1 = pElemRef;
   
   // Create OCCUPANCY_HEADER text label
-  pElemRef = gslc_ElemCreateTxt(&m_gui,OCCUPANCY_HEADER,E_PG_MAIN,(gslc_tsRect){10,40,25,10},
+  pElemRef = gslc_ElemCreateTxt(&m_gui,OCCUPANCY_HEADER,E_PG_MAIN,(gslc_tsRect){5,40,25,10},
     (char*)"",0,E_BUILTIN5X8);
   
   // Create CAPACITY_NUM_MONITOR numeric input field
   static char m_sInputNumber2[7] = "";
-  pElemRef = gslc_ElemCreateTxt(&m_gui,CAPACITY_NUM_MONITOR,E_PG_MAIN,(gslc_tsRect){40,70,67,22},
-    (char*)m_sInputNumber2,7,E_DOSISBOLD16V);
+  pElemRef = gslc_ElemCreateTxt(&m_gui,CAPACITY_NUM_MONITOR,E_PG_MAIN,(gslc_tsRect){38,68,67,22},
+    (char*)m_sInputNumber2,7,E_DOSISBOLD16V); 
+  gslc_ElemSetTxtAlign(&m_gui,pElemRef,GSLC_ALIGN_MID_MID);
   gslc_ElemSetTxtMargin(&m_gui,pElemRef,5);
+  gslc_ElemSetCol(&m_gui,pElemRef,GSLC_COL_BLACK,GSLC_COL_BLACK,GSLC_COL_BLACK);
+  gslc_ElemSetFillEn(&m_gui,pElemRef,false);
   gslc_ElemSetFrameEn(&m_gui,pElemRef,true);
   gslc_ElemSetClickEn(&m_gui, pElemRef, true);
   gslc_ElemSetTouchFunc(&m_gui, pElemRef, &CbBtnCommon);
   m_pElemVal2 = pElemRef;
+
+  // Create E_DRAW_LINE1 line 
+  pElemRef = gslc_ElemCreateLine(&m_gui,E_DRAW_LINE1,E_PG_MAIN,47,65,97,65);
+  gslc_ElemSetCol(&m_gui,pElemRef,GSLC_COL_BLACK,GSLC_COL_GRAY_LT2,GSLC_COL_GRAY_LT2);
 
   // -----------------------------------
   // PAGE: E_POP_KEYPAD_NUM
@@ -220,7 +209,6 @@ void InitGUIslice_gen()
   m_pElemKeyPadNum = gslc_ElemXKeyPadCreate_Num(&m_gui, E_ELEM_KEYPAD_NUM, E_POP_KEYPAD_NUM,
     &m_sKeyPadNum, 65, 80, E_BUILTIN5X8, &sCfg);
   gslc_ElemXKeyPadValSetCb(&m_gui, m_pElemKeyPadNum, &CbKeypad);
-  */
 //<InitGUI !End!>
 
 //<Startup !Start!>
