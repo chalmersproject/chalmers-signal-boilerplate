@@ -36,8 +36,8 @@
   #error Project tab->Target Platform should be arduino
 #endif
 #include <TFT_eSPI.h>
-#define DOSISBOOK16_VLW "DosisBold16"
-#define DOSISBOOK20_VLW "DosisBold20"
+#define DOSISBOOK16_VLW "FreeMono12pt7b.h"
+#define DOSISBOOK20_VLW "FreeMono18pt7b.h"
 //<Fonts !End!>
 
 // ------------------------------------------------
@@ -97,8 +97,8 @@ gslc_tsXRingGauge               m_sXRingGauge1;
 
 // Element References for direct access
 //<Extern_References !Start!>
-extern gslc_tsElemRef* m_pElemVal1;
-extern gslc_tsElemRef* m_pElemVal2;
+extern gslc_tsElemRef* m_OCCUPANCY;
+extern gslc_tsElemRef* m_CAPACITY;
 extern gslc_tsElemRef* m_pElemXRingGauge1;
 extern gslc_tsElemRef* m_pElemKeyPadNum;
 //<Extern_References !End!>
@@ -153,7 +153,7 @@ void InitGUIslice_gen()
 
   // Create ring gauge OCCUPANCY_GAGE
   static char m_sRingText1[11] = "";
-  /*
+  
   //
   // this RingGauge creates an upside down U shaped gage near bottom screen
   //
@@ -162,10 +162,10 @@ void InitGUIslice_gen()
                                        (char *)m_sRingText1, 11, E_BUILTIN5X8);
   gslc_ElemXRingGaugeSetValRange(&m_gui, pElemRef, 0, 100);
   gslc_ElemXRingGaugeSetAngleRange(&m_gui, pElemRef, 250, 220, true);
-  gslc_ElemXRingGaugeSetColorActiveFlat(&m_gui, pElemRef, GSLC_COL_GREEN);
+  gslc_ElemXRingGaugeSetColorActiveGradient(&m_gui, pElemRef, GSLC_COL_CYAN, GSLC_COL_GREEN_DK3);
   gslc_ElemXRingGaugeSetColorInactive(&m_gui, pElemRef, GSLC_COL_GRAY);
-  */
 
+/*
   //
   // this RingGuage creates a circle gage near middle screen
   //
@@ -174,29 +174,29 @@ void InitGUIslice_gen()
                                        (char *)m_sRingText1, 11, E_BUILTIN5X8);
   gslc_ElemXRingGaugeSetValRange(&m_gui, pElemRef, 0, 100);
   gslc_ElemXRingGaugeSetAngleRange(&m_gui, pElemRef, 0, 360, true);
-  gslc_ElemXRingGaugeSetColorActiveFlat(&m_gui, pElemRef, GSLC_COL_RED);
-  // gslc_ElemXRingGaugeSetColorActiveGradient(&m_gui, pElemRef, GSLC_COL_GREEN, GSLC_COL_YELLOW);
+  // gslc_ElemXRingGaugeSetColorActiveFlat(&m_gui, pElemRef, GSLC_COL_GREEN_LT2);
+  gslc_ElemXRingGaugeSetColorActiveGradient(&m_gui, pElemRef, GSLC_COL_GREEN_LT2, GSLC_COL_GREEN_DK3);
   gslc_ElemXRingGaugeSetColorInactive(&m_gui, pElemRef, GSLC_COL_GRAY);
-
+*/
   //
   // creates reference for this ringgauge so it can be updated later
   gslc_ElemXRingGaugeSetVal(&m_gui, pElemRef, 0); // Set initial value
   m_pElemXRingGauge1 = pElemRef;
-  /*
+  
   // Create CAPACITY_HEADER text label
-  pElemRef = gslc_ElemCreateTxt(&m_gui,CAPACITY_HEADER,E_PG_MAIN,(gslc_tsRect){10,70,25,10},
-    (char*)"",0,E_BUILTIN5X8);
+  // pElemRef = gslc_ElemCreateTxt(&m_gui,CAPACITY_HEADER,E_PG_MAIN,(gslc_tsRect){10,70,25,10},
+  //   (char*)"",0,E_BUILTIN5X8);
   
   // Create OCCUPANCY_NUM_MONITOR numeric input field
   static char m_sInputNumber1[7] = "";
-  pElemRef = gslc_ElemCreateTxt(&m_gui,OCCUPANCY_NUM_MONITOR,E_PG_MAIN,(gslc_tsRect){50,30,79,27},
-    (char*)m_sInputNumber1,7,E_DOSISBOLD20V);
-  gslc_ElemSetTxtMargin(&m_gui,pElemRef,5);
-  gslc_ElemSetFrameEn(&m_gui,pElemRef,true);
-  gslc_ElemSetClickEn(&m_gui, pElemRef, true);
-  gslc_ElemSetTouchFunc(&m_gui, pElemRef, &CbBtnCommon);
-  m_pElemVal1 = pElemRef;
-  
+  pElemRef = gslc_ElemCreateTxt(&m_gui,OCCUPANCY_NUM_MONITOR,E_PG_MAIN,(gslc_tsRect){20,70,30,30},
+  (char*)m_sInputNumber1,7,E_DOSISBOLD20V);
+  // gslc_ElemSetTxtMargin(&m_gui,pElemRef,5);
+  // gslc_ElemSetFrameEn(&m_gui,pElemRef,true);
+  // gslc_ElemSetClickEn(&m_gui, pElemRef, true);
+  // gslc_ElemSetTouchFunc(&m_gui, pElemRef, &CbBtnCommon);
+  m_OCCUPANCY = pElemRef;
+  /*
   // Create OCCUPANCY_HEADER text label
   pElemRef = gslc_ElemCreateTxt(&m_gui,OCCUPANCY_HEADER,E_PG_MAIN,(gslc_tsRect){10,40,25,10},
     (char*)"",0,E_BUILTIN5X8);
@@ -222,9 +222,9 @@ void InitGUIslice_gen()
     &m_sKeyPadNum, 65, 80, E_BUILTIN5X8, &sCfg);
   gslc_ElemXKeyPadValSetCb(&m_gui, m_pElemKeyPadNum, &CbKeypad);
   */
-//<InitGUI !End!>
+  //<InitGUI !End!>
 
-//<Startup !Start!>
+  //<Startup !Start!>
   gslc_GuiRotate(&m_gui, 0);
 //<Startup !End!>
 

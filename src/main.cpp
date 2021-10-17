@@ -23,7 +23,7 @@
 
 // Save some element references for quick access
 gslc_tsElemRef *m_pElemCnt = NULL;
-gslc_tsElemRef *m_pElemVal1 = NULL;
+gslc_tsElemRef *m_OCCUPANCY = NULL;
 gslc_tsElemRef *m_pElemVal2 = NULL;
 gslc_tsElemRef *m_pElemXRingGauge1 = NULL;
 gslc_tsElemRef *m_pElemKeyPadNum = NULL;
@@ -72,7 +72,7 @@ void loop()
   // ------------------------------------------------
   char dial_tick_string[MAX_STR];
   snprintf(dial_tick_string, MAX_STR, "%u", dial_tick);
-  gslc_ElemSetTxtStr(&m_gui, m_pElemXRingGauge1, dial_tick_string);
+  gslc_ElemSetTxtStr(&m_gui, m_OCCUPANCY, dial_tick_string);
   gslc_ElemXRingGaugeSetVal(&m_gui, m_pElemXRingGauge1, dial_tick);
   //TODO - Add update code for any text, gauges, or sliders
 
@@ -82,4 +82,3 @@ void loop()
   gslc_Update(&m_gui);
 }
 
-  
