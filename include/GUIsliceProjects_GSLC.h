@@ -136,10 +136,8 @@ void InitGUIslice_gen()
     // if (!gslc_FontSet(&m_gui,E_DOSISBOLD16V,GSLC_FONTREF_FNAME,DOSISBOOK16_VLW,16)) { return; }
     // gslc_FontSetMode(&m_gui, E_DOSISBOLD16V, GSLC_FONTREF_MODE_1);	
     // if (!gslc_FontSet(&m_gui,E_DOSISBOLD20V,GSLC_FONTREF_FNAME,DOSISBOOK20_VLW,20)) { return; }
-  if (!gslc_FontSet(&m_gui, E_FONT16, GSLC_FONTREF_FNAME, Font16, 16))
-  {
-    return;
-}
+
+gslc_FontSet(&m_gui, E_FONT16, GSLC_FONTREF_FNAME, Font16, 16);
 gslc_FontSetMode(&m_gui, E_FONT16, GSLC_FONTREF_MODE_1);
 // TODO: remove E_DOSISBOLD* references
 //<Load_Fonts !End!>
