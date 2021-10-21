@@ -38,6 +38,7 @@
 #include <TFT_eSPI.h>
 #define DOSISBOOK16_VLW "FreeMono12pt7b.h"
 #define DOSISBOOK20_VLW "FreeMono18pt7b.h"
+#define Font16 "Font16.h"
 //<Fonts !End!>
 
 // ------------------------------------------------
@@ -54,7 +55,14 @@ enum {E_PG_MAIN,E_POP_KEYPAD_NUM};
 enum {CAPACITY_HEADER,CAPACITY_NUM_MONITOR,OCCUPANCY_GAGE
       ,OCCUPANCY_HEADER,OCCUPANCY_NUM_MONITOR,E_ELEM_KEYPAD_NUM};
 // Must use separate enum for fonts with MAX_FONT at end to use gslc_FontSet.
-enum {E_BUILTIN5X8,E_DOSISBOLD16V,E_DOSISBOLD20V,MAX_FONT};
+enum
+{
+  E_BUILTIN5X8,
+  E_FONT16,
+  E_DOSISBOLD16V,
+  E_DOSISBOLD20V,
+  MAX_FONT
+};
 //<Enum !End!>
 
 // ------------------------------------------------
@@ -66,8 +74,7 @@ enum {E_BUILTIN5X8,E_DOSISBOLD16V,E_DOSISBOLD20V,MAX_FONT};
 // ------------------------------------------------
 //<ElementDefines !Start!>
 #define MAX_PAGE                2
-
-#define MAX_ELEM_PG_MAIN 5 // # Elems total on page
+#define MAX_ELEM_PG_MAIN 7 // # Elems total on page
 #define MAX_ELEM_PG_MAIN_RAM MAX_ELEM_PG_MAIN // # Elems in RAM
 //<ElementDefines !End!>
 
@@ -130,10 +137,18 @@ void InitGUIslice_gen()
   // ------------------------------------------------
   // Load Fonts
   // ------------------------------------------------
-//<Load_Fonts !Start!>
-    if (!gslc_FontSet(&m_gui,E_BUILTIN5X8,GSLC_FONTREF_PTR,NULL,1)) { return; }
+  //<Load_Fonts !Start!>
+  if (!gslc_FontSet(&m_gui, E_FONT16, GSLC_FONTREF_PTR, NULL, 1))
+  {
+    return;
+  }
+  gslc_FontSetMode(&m_gui, E_FONT16, GSLC_FONTREF_MODE_1);
+
+  if (!gslc_FontSet(&m_gui, E_BUILTIN5X8, GSLC_FONTREF_PTR, NULL, 1))
+  {
+    return; }
     if (!gslc_FontSet(&m_gui,E_DOSISBOLD16V,GSLC_FONTREF_FNAME,DOSISBOOK16_VLW,16)) { return; }
-    gslc_FontSetMode(&m_gui, E_DOSISBOLD16V, GSLC_FONTREF_MODE_1);	
+    
     if (!gslc_FontSet(&m_gui,E_DOSISBOLD20V,GSLC_FONTREF_FNAME,DOSISBOOK20_VLW,20)) { return; }
 //<Load_Fonts !End!>
 
@@ -190,7 +205,7 @@ void InitGUIslice_gen()
   // Create OCCUPANCY_NUM_MONITOR numeric input field
   static char m_sInputNumber1[7] = "";
   pElemRef = gslc_ElemCreateTxt(&m_gui,OCCUPANCY_NUM_MONITOR,E_PG_MAIN,(gslc_tsRect){20,70,30,30},
-  (char*)m_sInputNumber1,7,E_DOSISBOLD20V);
+  (char*)m_sInputNumber1,7,E_FONT16);
   // gslc_ElemSetTxtMargin(&m_gui,pElemRef,5);
   // gslc_ElemSetFrameEn(&m_gui,pElemRef,true);
   // gslc_ElemSetClickEn(&m_gui, pElemRef, true);
