@@ -12,7 +12,7 @@
 // ------------------------------------------------
 // Headers to include
 // ------------------------------------------------
-#include "GUIsliceProjects_GSLC.h"
+#include "../GUIsliceProjects/GUIsliceProjects_GSLC.h"
 
 
 // ------------------------------------------------
@@ -115,17 +115,30 @@ void setup()
   InitGUIslice_gen();
 
 }
-
+int dial_tick = 0;
+unsigned int now, dial_tick_interval;
 // -----------------------------------
 // Main event loop
 // -----------------------------------
 void loop()
 {
-
+  now = millis();
+  if (now - dial_tick_interval >= 200)
+  {
+    dial_tick++;
+    dial_tick_interval = now;
+  }
+  else if (dial_tick >= 100)
+  {
+    dial_tick = 0;
+  }
   // ------------------------------------------------
   // Update GUI Elements
   // ------------------------------------------------
-  
+  char dial_tick_string[MAX_STR];
+  snprintf(dial_tick_string, MAX_STR, "%u", dial_tick);
+  gslc_ElemSetTxtStr(&m_gui, m_pElemVal2, dial_tick_string);
+  gslc_ElemXRingGaugeSetVal(&m_gui, m_pElemXRingGauge1, dial_tick);
   //TODO - Add update code for any text, gauges, or sliders
   
   // ------------------------------------------------

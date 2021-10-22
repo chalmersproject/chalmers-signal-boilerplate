@@ -162,11 +162,12 @@ void InitGUIslice_gen()
   
   // Create CAPACITY_NUM_MONITOR numeric input field
   static char m_sInputNumber2[5] = "123";
-  pElemRef = gslc_ElemCreateTxt(&m_gui,CAPACITY_NUM_MONITOR,E_PG_MAIN,(gslc_tsRect){32,70,59,18},
+  pElemRef = gslc_ElemCreateTxt(&m_gui,CAPACITY_NUM_MONITOR,E_PG_MAIN,(gslc_tsRect){30,74,59,18},
     (char*)m_sInputNumber2,5,E_BUILTIN10X16);
   gslc_ElemSetTxtAlign(&m_gui,pElemRef,GSLC_ALIGN_MID_MID);
   gslc_ElemSetTxtMargin(&m_gui,pElemRef,5);
   gslc_ElemSetCol(&m_gui,pElemRef,GSLC_COL_BLACK,GSLC_COL_BLACK,GSLC_COL_BLACK);
+  gslc_ElemSetFillEn(&m_gui,pElemRef,false);
   gslc_ElemSetFrameEn(&m_gui,pElemRef,true);
   gslc_ElemSetClickEn(&m_gui, pElemRef, true);
   gslc_ElemSetTouchFunc(&m_gui, pElemRef, &CbBtnCommon);

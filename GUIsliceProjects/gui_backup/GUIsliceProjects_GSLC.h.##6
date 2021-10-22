@@ -52,7 +52,7 @@ enum {E_PG_MAIN,E_POP_KEYPAD_NUM};
 enum {CAPACITY_NUM_MONITOR,E_DRAW_LINE1,E_ELEM_TEXT1,OCCUPANCY_GAGE
       ,E_ELEM_KEYPAD_NUM};
 // Must use separate enum for fonts with MAX_FONT at end to use gslc_FontSet.
-enum {E_BUILTIN10X16,E_BUILTIN5X8,E_FREEMONO9,MAX_FONT};
+enum {E_BUILTIN5X8,E_FREEMONO12,E_FREEMONO9,MAX_FONT};
 //<Enum !End!>
 
 // ------------------------------------------------
@@ -128,8 +128,8 @@ void InitGUIslice_gen()
   // Load Fonts
   // ------------------------------------------------
 //<Load_Fonts !Start!>
-    if (!gslc_FontSet(&m_gui,E_BUILTIN10X16,GSLC_FONTREF_PTR,NULL,2)) { return; }
     if (!gslc_FontSet(&m_gui,E_BUILTIN5X8,GSLC_FONTREF_PTR,NULL,1)) { return; }
+    if (!gslc_FontSet(&m_gui,E_FREEMONO12,GSLC_FONTREF_PTR,&FreeMono12pt7b,1)) { return; }
     if (!gslc_FontSet(&m_gui,E_FREEMONO9,GSLC_FONTREF_PTR,&FreeMono9pt7b,1)) { return; }
 //<Load_Fonts !End!>
 
@@ -161,12 +161,13 @@ void InitGUIslice_gen()
   m_pElemXRingGauge1 = pElemRef;
   
   // Create CAPACITY_NUM_MONITOR numeric input field
-  static char m_sInputNumber2[5] = "123";
-  pElemRef = gslc_ElemCreateTxt(&m_gui,CAPACITY_NUM_MONITOR,E_PG_MAIN,(gslc_tsRect){32,70,59,18},
-    (char*)m_sInputNumber2,5,E_BUILTIN10X16);
+  static char m_sInputNumber2[5] = "";
+  pElemRef = gslc_ElemCreateTxt(&m_gui,CAPACITY_NUM_MONITOR,E_PG_MAIN,(gslc_tsRect){30,74,64,17},
+    (char*)m_sInputNumber2,5,E_FREEMONO12);
   gslc_ElemSetTxtAlign(&m_gui,pElemRef,GSLC_ALIGN_MID_MID);
   gslc_ElemSetTxtMargin(&m_gui,pElemRef,5);
   gslc_ElemSetCol(&m_gui,pElemRef,GSLC_COL_BLACK,GSLC_COL_BLACK,GSLC_COL_BLACK);
+  gslc_ElemSetFillEn(&m_gui,pElemRef,false);
   gslc_ElemSetFrameEn(&m_gui,pElemRef,true);
   gslc_ElemSetClickEn(&m_gui, pElemRef, true);
   gslc_ElemSetTouchFunc(&m_gui, pElemRef, &CbBtnCommon);
