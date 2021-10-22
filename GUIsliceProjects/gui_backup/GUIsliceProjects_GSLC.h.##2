@@ -36,6 +36,7 @@
   #error Project tab->Target Platform should be arduino
 #endif
 #include <TFT_eSPI.h>
+#define DOSISBOOK16_VLW "DosisBold16"
 //<Fonts !End!>
 
 // ------------------------------------------------
@@ -52,7 +53,7 @@ enum {E_PG_MAIN,E_POP_KEYPAD_NUM};
 enum {CAPACITY_NUM_MONITOR,E_DRAW_LINE1,OCCUPANCY_GAGE
       ,E_ELEM_KEYPAD_NUM};
 // Must use separate enum for fonts with MAX_FONT at end to use gslc_FontSet.
-enum {E_BUILTIN5X8,E_FREEMONO18,MAX_FONT};
+enum {E_BUILTIN5X8,E_DOSISBOLD16V,MAX_FONT};
 //<Enum !End!>
 
 // ------------------------------------------------
@@ -129,7 +130,8 @@ void InitGUIslice_gen()
   // ------------------------------------------------
 //<Load_Fonts !Start!>
     if (!gslc_FontSet(&m_gui,E_BUILTIN5X8,GSLC_FONTREF_PTR,NULL,1)) { return; }
-    if (!gslc_FontSet(&m_gui,E_FREEMONO18,GSLC_FONTREF_PTR,&FreeMono18pt7b,1)) { return; }
+    if (!gslc_FontSet(&m_gui,E_DOSISBOLD16V,GSLC_FONTREF_FNAME,DOSISBOOK16_VLW,16)) { return; }
+    gslc_FontSetMode(&m_gui, E_DOSISBOLD16V, GSLC_FONTREF_MODE_1);	
 //<Load_Fonts !End!>
 
 //<InitGUI !Start!>
@@ -154,15 +156,15 @@ void InitGUIslice_gen()
           (char*)m_sRingText1,11,E_BUILTIN5X8);
   gslc_ElemXRingGaugeSetValRange(&m_gui, pElemRef, 0, 100);
   gslc_ElemXRingGaugeSetVal(&m_gui, pElemRef, 20); // Set initial value
-  gslc_ElemXRingGaugeSetAngleRange(&m_gui,pElemRef, 250, 220, true);
+  gslc_ElemXRingGaugeSetAngleRange(&m_gui,pElemRef, 250, 220, false);
   gslc_ElemXRingGaugeSetColorActiveGradient(&m_gui, pElemRef, GSLC_COL_CYAN, GSLC_COL_RED);
   gslc_ElemXRingGaugeSetColorInactive(&m_gui,pElemRef, GSLC_COL_GREEN_DK2);
   m_pElemXRingGauge1 = pElemRef;
   
   // Create CAPACITY_NUM_MONITOR numeric input field
   static char m_sInputNumber2[7] = "";
-  pElemRef = gslc_ElemCreateTxt(&m_gui,CAPACITY_NUM_MONITOR,E_PG_MAIN,(gslc_tsRect){38,40,116,23},
-    (char*)m_sInputNumber2,7,E_FREEMONO18);
+  pElemRef = gslc_ElemCreateTxt(&m_gui,CAPACITY_NUM_MONITOR,E_PG_MAIN,(gslc_tsRect){38,40,67,22},
+    (char*)m_sInputNumber2,7,E_DOSISBOLD16V);
   gslc_ElemSetTxtAlign(&m_gui,pElemRef,GSLC_ALIGN_MID_MID);
   gslc_ElemSetTxtMargin(&m_gui,pElemRef,5);
   gslc_ElemSetCol(&m_gui,pElemRef,GSLC_COL_BLACK,GSLC_COL_BLACK,GSLC_COL_BLACK);
