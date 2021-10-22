@@ -22,6 +22,7 @@
 // Save some element references for direct access
 //<Save_References !Start!>
 gslc_tsElemRef* m_pElemVal2       = NULL;
+gslc_tsElemRef *m_pElemVal2_3 = NULL;
 gslc_tsElemRef* m_pElemXRingGauge1= NULL;
 gslc_tsElemRef* m_pElemKeyPadNum  = NULL;
 //<Save_References !End!>
@@ -97,7 +98,10 @@ bool CbKeypad(void* pvGui, void *pvElemRef, int16_t nState, void* pvData)
 //<Slider Callback !End!>
 //<Tick Callback !Start!>
 //<Tick Callback !End!>
-
+int OCCUPANCY = 0;
+int CAPACITY = 160;
+int dial_pos;
+unsigned int now, dial_tick_interval;
 void setup()
 {
   // ------------------------------------------------
@@ -113,38 +117,48 @@ void setup()
   // Create graphic elements
   // ------------------------------------------------
   InitGUIslice_gen();
-
 }
-int dial_tick = 0;
-unsigned int now, dial_tick_interval;
+
 // -----------------------------------
 // Main event loop
 // -----------------------------------
+bool forward = true;
 void loop()
 {
   now = millis();
-  if (now - dial_tick_interval >= 200)
+  if (now - dial_tick_interval >= 50 && forward)
   {
-    dial_tick++;
+    OCCUPANCY++;
     dial_tick_interval = now;
   }
-  else if (dial_tick >= 100)
+  else if (now - dial_tick_interval >= 50 && !forward)
   {
-    dial_tick = 0;
+    OCCUPANCY--;
+    dial_tick_interval = now;
   }
+  else if (OCCUPANCY >= CAPACITY)
+  {
+    forward = false;
+  }
+  else if (OCCUPANCY <= 0)
+  {
+    forward = true;
+  };
   // ------------------------------------------------
   // Update GUI Elements
   // ------------------------------------------------
-  char dial_tick_string[MAX_STR];
-  snprintf(dial_tick_string, MAX_STR, "%u", dial_tick);
-  gslc_ElemSetTxtStr(&m_gui, m_pElemVal2, dial_tick_string);
-  gslc_ElemXRingGaugeSetVal(&m_gui, m_pElemXRingGauge1, dial_tick);
+  char string_to_write[MAX_STR];
+  snprintf(string_to_write, MAX_STR, "%u", OCCUPANCY);
+  gslc_ElemSetTxtStr(&m_gui, m_pElemVal2, string_to_write);
+  snprintf(string_to_write, MAX_STR, "%u", CAPACITY);
+  gslc_ElemSetTxtStr(&m_gui, m_pElemVal2_3, string_to_write);
+  dial_pos = map(OCCUPANCY, 0, CAPACITY, 0, 100);
+  gslc_ElemXRingGaugeSetVal(&m_gui, m_pElemXRingGauge1, dial_pos);
   //TODO - Add update code for any text, gauges, or sliders
   
   // ------------------------------------------------
   // Periodically call GUIslice update function
   // ------------------------------------------------
   gslc_Update(&m_gui);
-    
 }
 

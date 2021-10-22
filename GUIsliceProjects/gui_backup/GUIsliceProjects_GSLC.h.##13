@@ -49,10 +49,10 @@
 // ------------------------------------------------
 //<Enum !Start!>
 enum {E_PG_MAIN,E_POP_KEYPAD_NUM};
-enum {CAPACITY_NUM_MONITOR,E_DRAW_LINE1,E_ELEM_NUMINPUT3,E_ELEM_TEXT1
-      ,OCCUPANCY_GAGE,E_ELEM_KEYPAD_NUM};
+enum {CAPACITY_NUM_MONITOR,E_DRAW_LINE1,E_ELEM_TEXT1,OCCUPANCY_GAGE
+      ,E_ELEM_KEYPAD_NUM};
 // Must use separate enum for fonts with MAX_FONT at end to use gslc_FontSet.
-enum {E_BUILTIN5X8,E_FREESANS18,E_FREESANS9,E_FREESANSBOLD9,MAX_FONT};
+enum {E_BUILTIN5X8,E_FREEMONO9,E_FREESANS12,MAX_FONT};
 //<Enum !End!>
 
 // ------------------------------------------------
@@ -65,7 +65,7 @@ enum {E_BUILTIN5X8,E_FREESANS18,E_FREESANS9,E_FREESANSBOLD9,MAX_FONT};
 //<ElementDefines !Start!>
 #define MAX_PAGE                2
 
-#define MAX_ELEM_PG_MAIN 5 // # Elems total on page
+#define MAX_ELEM_PG_MAIN 4 // # Elems total on page
 #define MAX_ELEM_PG_MAIN_RAM MAX_ELEM_PG_MAIN // # Elems in RAM
 //<ElementDefines !End!>
 
@@ -96,7 +96,6 @@ gslc_tsXRingGauge               m_sXRingGauge1;
 // Element References for direct access
 //<Extern_References !Start!>
 extern gslc_tsElemRef* m_pElemVal2;
-extern gslc_tsElemRef* m_pElemVal2_3;
 extern gslc_tsElemRef* m_pElemXRingGauge1;
 extern gslc_tsElemRef* m_pElemKeyPadNum;
 //<Extern_References !End!>
@@ -130,9 +129,8 @@ void InitGUIslice_gen()
   // ------------------------------------------------
 //<Load_Fonts !Start!>
     if (!gslc_FontSet(&m_gui,E_BUILTIN5X8,GSLC_FONTREF_PTR,NULL,1)) { return; }
-    if (!gslc_FontSet(&m_gui,E_FREESANS18,GSLC_FONTREF_PTR,&FreeSans18pt7b,1)) { return; }
-    if (!gslc_FontSet(&m_gui,E_FREESANS9,GSLC_FONTREF_PTR,&FreeSans9pt7b,1)) { return; }
-    if (!gslc_FontSet(&m_gui,E_FREESANSBOLD9,GSLC_FONTREF_PTR,&FreeSansBold9pt7b,1)) { return; }
+    if (!gslc_FontSet(&m_gui,E_FREEMONO9,GSLC_FONTREF_PTR,&FreeMono9pt7b,1)) { return; }
+    if (!gslc_FontSet(&m_gui,E_FREESANS12,GSLC_FONTREF_PTR,&FreeSans12pt7b,1)) { return; }
 //<Load_Fonts !End!>
 
 //<InitGUI !Start!>
@@ -153,7 +151,7 @@ void InitGUIslice_gen()
   // Create ring gauge OCCUPANCY_GAGE 
   static char m_sRingText1[11] = "";
   pElemRef = gslc_ElemXRingGaugeCreate(&m_gui,OCCUPANCY_GAGE,E_PG_MAIN,&m_sXRingGauge1,
-          (gslc_tsRect){9,26,105,105},
+          (gslc_tsRect){12,44,100,100},
           (char*)m_sRingText1,11,E_BUILTIN5X8);
   gslc_ElemXRingGaugeSetValRange(&m_gui, pElemRef, 0, 100);
   gslc_ElemXRingGaugeSetVal(&m_gui, pElemRef, 20); // Set initial value
@@ -164,8 +162,8 @@ void InitGUIslice_gen()
   
   // Create CAPACITY_NUM_MONITOR numeric input field
   static char m_sInputNumber2[5] = "123";
-  pElemRef = gslc_ElemCreateTxt(&m_gui,CAPACITY_NUM_MONITOR,E_PG_MAIN,(gslc_tsRect){34,50,55,27},
-    (char*)m_sInputNumber2,5,E_FREESANS18);
+  pElemRef = gslc_ElemCreateTxt(&m_gui,CAPACITY_NUM_MONITOR,E_PG_MAIN,(gslc_tsRect){32,70,61,19},
+    (char*)m_sInputNumber2,5,E_FREESANS12);
   gslc_ElemSetTxtAlign(&m_gui,pElemRef,GSLC_ALIGN_MID_MID);
   gslc_ElemSetTxtMargin(&m_gui,pElemRef,5);
   gslc_ElemSetCol(&m_gui,pElemRef,GSLC_COL_BLACK,GSLC_COL_BLACK,GSLC_COL_BLACK);
@@ -175,26 +173,14 @@ void InitGUIslice_gen()
   m_pElemVal2 = pElemRef;
 
   // Create E_DRAW_LINE1 line 
-  pElemRef = gslc_ElemCreateLine(&m_gui,E_DRAW_LINE1,E_PG_MAIN,37,85,87,85);
+  pElemRef = gslc_ElemCreateLine(&m_gui,E_DRAW_LINE1,E_PG_MAIN,37,99,87,99);
   gslc_ElemSetCol(&m_gui,pElemRef,GSLC_COL_BLACK,GSLC_COL_GRAY_LT2,GSLC_COL_GRAY_LT2);
   
   // Create E_ELEM_TEXT1 text label
-  pElemRef = gslc_ElemCreateTxt(&m_gui,E_ELEM_TEXT1,E_PG_MAIN,(gslc_tsRect){37,5,50,15},
-    (char*)"BEDS",0,E_FREESANSBOLD9);
+  pElemRef = gslc_ElemCreateTxt(&m_gui,E_ELEM_TEXT1,E_PG_MAIN,(gslc_tsRect){40,10,43,12},
+    (char*)"BEDS",0,E_FREEMONO9);
   gslc_ElemSetTxtAlign(&m_gui,pElemRef,GSLC_ALIGN_MID_MID);
   gslc_ElemSetTxtCol(&m_gui,pElemRef,GSLC_COL_WHITE);
-  
-  // Create E_ELEM_NUMINPUT3 numeric input field
-  static char m_sInputNumber3[5] = "123";
-  pElemRef = gslc_ElemCreateTxt(&m_gui,E_ELEM_NUMINPUT3,E_PG_MAIN,(gslc_tsRect){47,90,30,15},
-    (char*)m_sInputNumber3,5,E_FREESANS9);
-  gslc_ElemSetTxtAlign(&m_gui,pElemRef,GSLC_ALIGN_MID_MID);
-  gslc_ElemSetTxtMargin(&m_gui,pElemRef,5);
-  gslc_ElemSetCol(&m_gui,pElemRef,GSLC_COL_BLACK,GSLC_COL_BLACK,GSLC_COL_BLACK);
-  gslc_ElemSetFrameEn(&m_gui,pElemRef,true);
-  gslc_ElemSetClickEn(&m_gui, pElemRef, true);
-  gslc_ElemSetTouchFunc(&m_gui, pElemRef, &CbBtnCommon);
-  m_pElemVal2_3 = pElemRef;
 
   // -----------------------------------
   // PAGE: E_POP_KEYPAD_NUM
