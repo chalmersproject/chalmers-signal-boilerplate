@@ -24,3 +24,10 @@ void example_show_LED()
   fill_solid(leds, NUM_LEDS, color);
   FastLED.show();
 }
+
+void show_LED(int color_r, int color_g, int color_b)
+{
+  CHSV color = CHSV(color_r, color_g, color_b);
+  fill_solid(leds, NUM_LEDS, color);
+  FastLED.show();
+}
