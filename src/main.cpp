@@ -13,19 +13,14 @@
 // Headers to include
 // ------------------------------------------------
 
+#include <Arduino.h>
+#include <SPI.h>
 
-
-
+#include "setup_routines_and_globals/wifi_globals.h"
 #include "../GUIsliceProjects/GUIsliceProjects_GSLC.h"
 #include "setup_routines_and_globals/guislice_init.h"
 #include "setup_routines_and_globals/led_globals.h"
-// #include "setup_routines_and_globals/wifi_globals.h"
 
-// #include <ESP8266HTTPClient.h>
-// #include <ESP8266WiFi.h>
-// #include <WiFiClientSecure.h> // create TLS connection
-// #include <WiFiManager.h>
-// WiFiClientSecure client;
 // ------------------------------------------------
 // Program Globals
 // ------------------------------------------------
@@ -55,7 +50,7 @@ void setup()
   // Create graphic elements
   // ------------------------------------------------
   InitGUIslice_gen();
-  // initWifi();
+  initWifi();
   LED_Setup();
   example_show_LED();
 }
