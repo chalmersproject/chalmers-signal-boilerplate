@@ -16,11 +16,15 @@
 #include <Arduino.h>
 #include <SPI.h>
 
-#include "setup_routines_and_globals/wifi_globals.h"
-#include "../GUIsliceProjects/GUIsliceProjects_GSLC.h"
-#include "setup_routines_and_globals/guislice_init.h"
-#include "setup_routines_and_globals/led_globals.h"
 
+#include "setup_interrupts_globals/wifi_globals.h"
+#include "../GUIsliceProjects/GUIsliceProjects_GSLC.h"
+#include "setup_interrupts_globals/rotary_encoder_init.h"
+#include "setup_interrupts_globals/guislice_init.h"
+#include "setup_interrupts_globals/led_globals.h"
+
+#include "sub_routines/occupancy_cycle_test.h"
+#include "sub_routines/position_change_rotary_encoder.h"
 // ------------------------------------------------
 // Program Globals
 // ------------------------------------------------
@@ -31,10 +35,8 @@
 // ------------------------------------------------
 #include "sub_routines/guislice_callbacks.h"
 
-int OCCUPANCY = 0;
-int CAPACITY = 160;
-int dial_pos;
-unsigned int now, dial_tick_interval;
+
+
 void setup()
 {
   // ------------------------------------------------
@@ -52,43 +54,48 @@ void setup()
   InitGUIslice_gen();
   initWifi();
   LED_Setup();
+  rotary_encoder_setup();
   example_show_LED();
 }
 
 // -----------------------------------
 // Main event loop
 // -----------------------------------
-bool forward = true;
+unsigned int now;
+int OCCUPANCY = 0;
+int CAPACITY = 160;
+// int dial_pos;
 void loop()
 {
+  //
+  // record how many *millis*econds since esp startup -- for timers used throughout this program
+  //
   now = millis();
-  if (now - dial_tick_interval >= 50 && forward)
-  {
-    OCCUPANCY++;
-    dial_tick_interval = now;
-  }
-  else if (now - dial_tick_interval >= 50 && !forward)
-  {
-    OCCUPANCY--;
-    dial_tick_interval = now;
-  }
-  else if (OCCUPANCY >= CAPACITY)
-  {
-    forward = false;
-  }
-  else if (OCCUPANCY <= 0)
-  {
-    forward = true;
-  };
+
+  // OCCUPANCY = occupancy_cycle_test(200, now, OCCUPANCY, CAPACITY); // test program that runs the Occupancy up to max and back to 0 in a loop. Adds/Subtracts 1 occupancy every n millis
+  
+  OCCUPANCY = position_change_rotary_encoder(encoder, OCCUPANCY);
+
+
   // ------------------------------------------------
   // Update GUI Elements
   // ------------------------------------------------
+  
+  //
+  // Update OCCUPANCY and CAPACITY GUI numbers
+  //
   char string_to_write[MAX_STR];
+  
   snprintf(string_to_write, MAX_STR, "%u", OCCUPANCY);
   gslc_ElemSetTxtStr(&m_gui, m_pElemVal2, string_to_write);
+  
   snprintf(string_to_write, MAX_STR, "%u", CAPACITY);
   gslc_ElemSetTxtStr(&m_gui, m_pElemVal2_3, string_to_write);
-  dial_pos = map(OCCUPANCY, 0, CAPACITY, 0, 100);
+
+  //
+  // Update GUISlice gauge
+  //
+  int dial_pos = map(OCCUPANCY, 0, CAPACITY, 0, 100);
   gslc_ElemXRingGaugeSetVal(&m_gui, m_pElemXRingGauge1, dial_pos);
   //TODO - Add update code for any text, gauges, or sliders
   
