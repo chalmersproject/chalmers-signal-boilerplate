@@ -1,5 +1,5 @@
 //
-// wait at least 3 seconds since last change before pushing to api.chalmers.project
+// wait at least 3 seconds since last change before pushing to api.cloud.chalmersproject.com
 //
 
 void wait_to_push(int wait, int last, bool change_to_push, int _millis, bool enable_internet)

@@ -22,3 +22,4 @@ int occupancy_cycle_test(int speed, unsigned int now, int OCCUPANCY, int CAPACIT
     };
     return OCCUPANCY;
 }
+

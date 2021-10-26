@@ -16,23 +16,21 @@
 #include <Arduino.h>
 #include <SPI.h>
 
+#include "../GUIsliceProjects/GUIsliceProjects_GSLC.h"
 
 #include "setup_interrupts_globals/wifi_globals.h"
-#include "../GUIsliceProjects/GUIsliceProjects_GSLC.h"
 #include "setup_interrupts_globals/rotary_encoder_init.h"
 #include "setup_interrupts_globals/guislice_init.h"
 #include "setup_interrupts_globals/led_globals.h"
+#include "setup_interrupts_globals/graphql_requests_init.h"
+
+//
+// initializes graphql-query/shelter object
+//
+#include "setup_interrupts_globals/graphql_shelter_obj_init.h"
 
 #include "sub_routines/occupancy_cycle_test.h"
 #include "sub_routines/position_change_rotary_encoder.h"
-// ------------------------------------------------
-// Program Globals
-// ------------------------------------------------
-
-
-// ------------------------------------------------
-// Callback Methods
-// ------------------------------------------------
 #include "sub_routines/guislice_callbacks.h"
 
 
@@ -64,7 +62,7 @@ void setup()
 unsigned int now;
 int OCCUPANCY = 0;
 int CAPACITY = 160;
-// int dial_pos;
+
 void loop()
 {
   //
@@ -75,7 +73,7 @@ void loop()
   // OCCUPANCY = occupancy_cycle_test(200, now, OCCUPANCY, CAPACITY); // test program that runs the Occupancy up to max and back to 0 in a loop. Adds/Subtracts 1 occupancy every n millis
   
   OCCUPANCY = position_change_rotary_encoder(encoder, OCCUPANCY);
-
+  OCCUPANCY = occupancy_range_limiter(OCCUPANCY, CAPACITY);
 
   // ------------------------------------------------
   // Update GUI Elements

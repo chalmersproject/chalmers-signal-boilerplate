@@ -19,3 +19,22 @@ int position_change_rotary_encoder(RotaryEncoder encoder, int OCCUPANCY)
     }
     return OCCUPANCY;
 }
+
+//
+// keep OCCUPANCY within 0/CAPACITY RANGE
+//
+
+int occupancy_range_limiter(int OCCUPANCY, int CAPACITY)
+{
+    if (OCCUPANCY < 0)
+    {
+        OCCUPANCY = 0;
+        return OCCUPANCY;
+    }else if (OCCUPANCY > CAPACITY){
+        OCCUPANCY = CAPACITY;
+        return OCCUPANCY;
+    }else
+    {
+        return OCCUPANCY;
+    }
+}
