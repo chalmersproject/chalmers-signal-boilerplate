@@ -56,8 +56,8 @@ query CheckSignalMeasurement(      \
 
 typedef struct graphqlQuery
 {
-    char req[REQBUFF_SIZE];
-    char var[VARBUFF_SIZE];
-    int status;
-    String resp;
+  char req[REQBUFF_SIZE];
+  char var[VARBUFF_SIZE];
+  int status;
+  String resp;
 } GraphqlQuery;
