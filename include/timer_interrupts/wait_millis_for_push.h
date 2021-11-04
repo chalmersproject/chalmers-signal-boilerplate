@@ -2,16 +2,31 @@
 // wait at least 3 seconds since last change before pushing to api.chalmers.project
 //
 
-void wait_to_push(int wait, int last, bool change_to_push, int _millis, bool enable_internet)
+int last_graphql_push = 0;
+void wait_to_push(int wait, int OCCUPANCY, bool enable_internet)
 {
-    int now = _millis;
-    if (now - last >= wait && change_to_push)
+    if (now - last_graphql_push >= wait && change_to_push)
     {
         if (enable_internet == true)
         {
             Serial.println("pushing to api.chalmersproject.com");
-            // occupancy_request(client, occupancy, "push");
+            occupancy_request(client, OCCUPANCY, "push");
             change_to_push = false;
+            last_graphql_push = now;
+        }
+    }
+}
+
+int last_graphql_pull = 0;
+void wait_to_pull(int wait, bool change_to_push, int OCCUPANCY, bool enable_internet)
+{
+    if ( (now - last_graphql_pull >= wait) && (change_to_push == false) )
+    {
+        if (enable_internet == true)
+        {
+            Serial.println("pulling from api.chalmersproject.com");
+            // occupancy_request(client, OCCUPANCY, "pull");
+            last_graphql_pull = now;
         }
     }
 }

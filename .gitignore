@@ -7,6 +7,5 @@
 .clang_complete
 .gcc-flags.json
 
-#secrets SSIDs and passwds
-include/credentials.h
+#secrets, api keys and passwds
 include/shelter_secrets.h
