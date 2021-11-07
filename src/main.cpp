@@ -47,8 +47,7 @@ int CAPACITY = 160;
 
 #include "timer_interrupts/wait_millis_for_push.h"
 
-    void
-    setup()
+void setup()
 {
   // ------------------------------------------------
   // Initialize
@@ -92,7 +91,7 @@ void loop()
   // ------------------------------------------------
   // PUSH/PULL to cloud DB periodically
   // ------------------------------------------------
-  wait_to_pull(3000, OCCUPANCY, enable_internet);
+  wait_to_push(3000, OCCUPANCY, enable_internet);
 
   // ------------------------------------------------
   // Update all GUISlice elements

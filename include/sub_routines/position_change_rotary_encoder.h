@@ -29,6 +29,7 @@ int position_change_rotary_encoder(RotaryEncoder encoder, int OCCUPANCY, int CAP
         // enable global flag that a change needs to be pushed to cloud db
         //
         change_to_push = true;
+        last_graphql_push = now;
         Serial.println("Pos: " + (String)newPos);
         if (pos > newPos)
         {

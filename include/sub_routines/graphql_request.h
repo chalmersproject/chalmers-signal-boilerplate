@@ -1,5 +1,5 @@
 // HTTP POST to chalmersproject API
-void occupancy_request(WiFiClientSecure client, int occupancy, String push_or_pull)
+void occupancy_request(WiFiClientSecure client, String push_or_pull)
 {
     // GraphqlQuery *graphql = (GraphqlQuery *)malloc(sizeof(GraphqlQuery));
     HTTPClient http;
@@ -9,9 +9,10 @@ void occupancy_request(WiFiClientSecure client, int occupancy, String push_or_pu
 
     varJson["signalId"] = SIGNAL_ID;
     varJson["signalSecret"] = SIGNAL_SECRET;
-    varJson["measurement"] = occupancy;
+    varJson["measurement"] = OCCUPANCY;
 
-    Serial.println("Sending HTTP POST");
+    Serial.println("Measurement value: " + (String) varJson["measurement"]);
+        Serial.println("Sending HTTP POST");
     http.begin(client, _API_HOST);
     http.addHeader("Content-Type", "application/json");
 
