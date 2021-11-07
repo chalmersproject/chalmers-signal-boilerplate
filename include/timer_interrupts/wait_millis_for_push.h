@@ -18,14 +18,14 @@ void wait_to_push(int wait, int OCCUPANCY, bool enable_internet)
 }
 
 int last_graphql_pull = 0;
-void wait_to_pull(int wait, bool change_to_push, int OCCUPANCY, bool enable_internet)
+void wait_to_pull(int wait, int OCCUPANCY, bool enable_internet)
 {
     if ( (now - last_graphql_pull >= wait) && (change_to_push == false) )
     {
         if (enable_internet == true)
         {
             Serial.println("pulling from api.chalmersproject.com");
-            // occupancy_request(client, OCCUPANCY, "pull");
+            occupancy_request(client, OCCUPANCY, "pull");
             last_graphql_pull = now;
         }
     }

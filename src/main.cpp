@@ -92,7 +92,7 @@ void loop()
   // ------------------------------------------------
   // PUSH/PULL to cloud DB periodically
   // ------------------------------------------------
-  wait_to_push(3000, OCCUPANCY, enable_internet);
+  wait_to_pull(3000, OCCUPANCY, enable_internet);
 
   // ------------------------------------------------
   // Update all GUISlice elements

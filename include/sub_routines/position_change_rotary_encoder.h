@@ -3,20 +3,15 @@
 //
 int occupancy_range_limiter(int OCCUPANCY, int CAPACITY)
 {
-    if (OCCUPANCY < 0)
+    if (OCCUPANCY <= 0)
     {
         OCCUPANCY = 0;
-        return OCCUPANCY;
     }
-    else if (OCCUPANCY > CAPACITY)
+    else if (OCCUPANCY >= CAPACITY)
     {
         OCCUPANCY = CAPACITY;
-        return OCCUPANCY;
     }
-    else
-    {
-        return OCCUPANCY;
-    }
+    return OCCUPANCY;
 }
 
 //
