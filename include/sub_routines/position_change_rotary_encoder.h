@@ -30,6 +30,7 @@ int position_change_rotary_encoder(RotaryEncoder encoder, int OCCUPANCY, int CAP
         //
         change_to_push = true;
         last_graphql_push = now;
+        
         Serial.println("Pos: " + (String)newPos);
         if (pos > newPos)
         {

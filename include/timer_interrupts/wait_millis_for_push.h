@@ -2,7 +2,6 @@
 // wait at least 3 seconds since last change before pushing to api.chalmers.project
 //
 
-int last_graphql_push = 0;
 void wait_to_push(int wait, int OCCUPANCY, bool enable_internet)
 {
     if (now - last_graphql_push >= wait && change_to_push)
@@ -22,7 +21,7 @@ void wait_to_push(int wait, int OCCUPANCY, bool enable_internet)
 // if it's been *wait* milliseconds since last push or pull, 
 // pull data from database and sync it with local global variables
 //
-int last_graphql_pull = 0;
+
 void wait_to_pull(int wait, int OCCUPANCY, bool enable_internet)
 {
     if ( (now - last_graphql_pull >= wait) && (change_to_push == false) )
