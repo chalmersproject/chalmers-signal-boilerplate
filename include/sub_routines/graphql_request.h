@@ -1,5 +1,13 @@
 // HTTP POST to chalmersproject API
-void occupancy_request(WiFiClientSecure client, String push_or_pull)
+typedef struct graphqlQuery
+{
+    char req[REQBUFF_SIZE];
+    char var[VARBUFF_SIZE];
+    int status;
+    String resp;
+} GraphqlQuery;
+
+void occupancy_request(WiFiClientSecure client, int occupancy, String push_or_pull)
 {
     // GraphqlQuery *graphql = (GraphqlQuery *)malloc(sizeof(GraphqlQuery));
     HTTPClient http;
@@ -9,7 +17,7 @@ void occupancy_request(WiFiClientSecure client, String push_or_pull)
 
     varJson["signalId"] = SIGNAL_ID;
     varJson["signalSecret"] = SIGNAL_SECRET;
-    varJson["measurement"] = OCCUPANCY;
+    varJson["measurement"] = occupancy;
 
     Serial.println("Measurement value: " + (String) varJson["measurement"]);
         Serial.println("Sending HTTP POST");
