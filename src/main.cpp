@@ -13,7 +13,7 @@ F/OSS under M.I.T License
 // TEST programs & TROUBLESHOOTING flags
 // ------------------------------------------------
 bool enable_cycle_OCCUPANCY_test = false;
-bool enable_internet = true;
+bool enable_internet = false;
 
 // ------------------------------------------------
 // Headers to include
@@ -21,7 +21,7 @@ bool enable_internet = true;
 
 #include <Arduino.h>
 #include <SPI.h>
-
+#include <ArduinoJson.h>
 #include "shelter_secrets.h"
 // ------------------------------------------------
 // Global Variables
@@ -87,12 +87,24 @@ void loop()
   OCCUPANCY = (enable_cycle_OCCUPANCY_test == false) ? 
                 position_change_rotary_encoder(encoder, OCCUPANCY, CAPACITY) : 
                 occupancy_cycle_test(200, now, OCCUPANCY, CAPACITY);
+  // ------------------------------------------------
+  // Update LED color
+  // ------------------------------------------------
+  // if (change_to_push == true)
+  // {
+  //   hue = map(OCCUPANCY, 0, CAPACITY, 90, 0);
+  //   CHSV color = CHSV(hue, 255, 255);
+  //   fill_solid(leds, NUM_LEDS, color);
+  //   FastLED.show();
+  //   change_to_push = false;
+  // }
 
   // ------------------------------------------------
   // PUSH/PULL to cloud DB periodically
   // ------------------------------------------------
-  wait_to_push(3000, OCCUPANCY, enable_internet);
+  // wait_to_push(3000, OCCUPANCY, enable_internet);
   // wait_to_pull(3000, OCCUPANCY, enable_internet);
+
   // ------------------------------------------------
   // Update all GUISlice elements
   // ------------------------------------------------
